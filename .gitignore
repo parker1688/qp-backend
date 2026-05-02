@@ -2,7 +2,6 @@
 /bootpkg.log
 /.idea
 /*.exe
-/go.mod
 /conf.yaml
 /upload/*.png
 /*.log
