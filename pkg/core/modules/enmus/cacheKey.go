@@ -1,0 +1,61 @@
+package enmus
+
+const (
+	//登录错误次数
+	REDIS_LOGIN_ERR_COUNT = "LOGIN:ERROR:COUNT:"
+	//登录TOKEN
+	REDIS_LOGIN_TOKEN = "LOGIN:USER:TOKEN:"
+	//登录的用户信息
+	REDIS_LOGIN_USERINFO = "LOGIN:USER:USERINFO:"
+	//双重验证错误
+	REDIS_LOGIN_MFA = "LOGIN:USER:MFA:"
+)
+
+const (
+	REDIS_TABLE_ROLE  = "TABLE_ROLE"
+	REDIS_TABLE_MENUS = "TABLE_MENUS"
+)
+
+const (
+	//会员登录Token
+	REDIS_MEMBER_LOGIN_TOKEN = "LOGIN:MEMBER:TOKEN:%s"
+	//登录的用户信息
+	REDIS_LOGIN_MEMBERINFO = "LOGIN:USER:MEMBERINFO:%s"
+
+	//登录错误次数
+	MEMBER_REDIS_LOGIN_ERR_COUNT = "MEMBER::LOGIN:ERROR:COUNT:"
+
+	REDIS_MEMBER_TOKEN_CALLBACK_TOKEN = "REDIS_MEMBER_TOKEN_CALLBACK_TOKEN:%s"
+
+	MEMBER_REDIS_EMAIL_VeryCode           = "MEMBER::EmailVeryCode::%s::%s::%s"
+	MEMBER_REDIS_EMAIL_VeryCode_Lock      = "MEMBER::EmailVeryCode::Lock::%s::%s::%s"
+	MEMBER_REDIS_EMAIL_VeryCode_ERR_COUNT = "MEMBER::EmailVeryCode::ERR_COUNT::%s"
+
+	PG_CALLBACK_TOKEN_KEY  = "PG_CALLBACK_TOKEN_KEY::%s"
+	WUG_CALLBACK_TOKEN_KEY = "WUG_CALLBACK_TOKEN_KEY::%s"
+
+	VENUE_LOGIN_TOKEN_KEY = "%s_LOGIN_TOKEN_KEY" // 皇冠體育登錄 token
+
+	MEMBER_REDIS_PHONE_VeryCode      = "MEMBER::PhoneVeryCode::%s::%s::%s"
+	MEMBER_REDIS_PHONE_VeryCode_Lock = "MEMBER::PhoneVeryCode::Lock::%s::%s::%s"
+	MEMBER_REDIS_PASS_ForgotToken    = "MEMBER::PassForgotToken::%s" // 忘记密码令牌（由于忘记密码是未登录状态接口没有用户token故需要设置一个令牌确保安全性）
+	MEMBER_REDIS_RECHARGE_APPLY_LOCK = "MEMBER::RechargeApply::Lock::%s"
+	MEMBER_REDIS_WITHDRAW_APPLY_LOCK = "MEMBER::WithdrawApply::Lock::%s"
+)
+
+const (
+	//会员登录Token
+	REDIS_AGENT_LOGIN_TOKEN = "LOGIN:AGENT:TOKEN:%s"
+	//登录的用户信息
+	REDIS_LOGIN_AGENTINFO = "LOGIN:AGENT:AGENTINFO:%s"
+
+	//登录错误次数
+	AGENT_REDIS_LOGIN_ERR_COUNT = "AGENT::LOGIN:ERROR:COUNT:"
+
+	AGENT_REDIS_EMAIL_VeryCode      = "AGENT::EmailVeryCode::%s::%s::%s"
+	AGENT_REDIS_EMAIL_VeryCode_Lock = "AGENT::EmailVeryCode::Lock::%s::%s::%s"
+)
+
+const (
+	REDIS_MEMBER_VISITORID = "REDIS_MEMBER_VISITORID"
+)

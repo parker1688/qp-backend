@@ -1,0 +1,139 @@
+General:
+   # Debug | Release
+   ENV: 'Debug'
+   SHA256Salt: '123i1j2i3jiqewinajnjasdfnujaisdfhu1h23u1h2u3hnjqknjkansdjfnjxzcv'
+   AesEcbKey: 'fhu1@12#1h2!3hnj'
+   AesUserKey: 'bilIRkcuoNLmvZ0e'
+   HttpProxy: ''
+   DefaultCurrency: 'CNY'
+   UploadFilePath: './upload'
+   ApiSHA256Salt: 'xxfsdgdfh*328&**()(()'
+   Ipdb: './config/city.ipdb'
+
+Mysql:
+   IsInit: true
+   DSN: 'root:Lx_Bca0zj63322@(43.198.95.52:3306)/q_game?charset=utf8&parseTime=true&loc=Local&tls=skip-verify'
+   MaxOpenConn: 20
+   MaxIdleConn: 20
+   EncryptionDSN: false
+
+MysqlSharding:
+   IsInit: true
+   DSN: 'root:Lx_Bca0zj63322@tcp(43.198.95.52:3306)/q_game?charset=utf8mb4&parseTime=true'
+   MaxOpenConn: 20
+   MaxIdleConn: 20
+   EncryptionDSN: false
+   SkipInitializeWithVersion: false
+
+Redis:
+   IsInit: true
+   Addr: '127.0.0.1:6379'
+   Password: 'Zx_kj7112233'
+   DB : 0
+   PoolSize: 10
+
+
+
+# Kafka
+MQ:
+   # false: 不启用,true:启用
+   IsInit: false
+   Kafka:
+      #连接地址 ,分隔
+      Addr: '43.198.95.52:9099'
+      # 发送消息: false 同步方式, true异步方式
+      IsAsync: false
+      #版本号(关键)
+      Version: '2.8.1'
+
+Venue:
+   IsInit: false
+   TYQP:
+      url: 'http://testapi.th771.com'
+      userid: '79832463'
+      md5Key: '3b729f7a9a69a847806f51594debdcda'
+      deskey: '8425bc5c58429f3c1bc3d1988457c2a9'
+      apisuffix: 'tianhao105'
+   WUGDZ:
+      url: 'https://stage-api.5gg.win'
+      hostId: '98f5a1e7f88fbf7197f0f3d67b1027a8'
+      hostToken: '704E60dA2D925F6395c921d6271Ba1aBf97316a3dCdB07f3cCaE4Fa22E82c501'
+      returnUrl: ''
+      returnTarget: ''
+   FGDZ:
+      url: 'https://uat-DFgamefg02-uat-AMXPJADMIN.bbest8.com'
+      merchantname: 'uat_DFgamefg02-uat_AMXPJADMIN'
+      merchantcode: 'f84a16bbc8bc2b87b7f3c99c5d3de3a3'
+      returnUrl: ''
+   LYQP:
+      url: 'https://wc1-api.kewmn686.com'
+      agent: '201600'
+      md5key: '016CB93D5646894C'
+      aesKey: '29CF9176D59F3751'
+   VGQP:
+      url: 'https://ts12316.com'
+      channel: 'HYYL'
+      agent: ''
+      password: '1H6yfeD2a6nFBb'
+   HGTY:
+      url: 'https://api.orb-6789.com'
+      aeskey: 'NzolC89DJaEbZlJ9'
+      account: 'ZF511bt'
+      password: 'aaa123'
+      agid: '3546'
+   DBDJ:
+      url: 'https://jddemoapi.merchantapi07.com'
+      merchant: '1740722472323'
+      md5key: '6ab8c50a61684a74a95fb0e0c81f52a2'
+   MTQP:
+      url: 'https://socket1.mtstta.com' #api 接口地址
+      merchantId: '20171400'
+      merchantName: 'MTTest'
+      secret: '69E7C48BC9318F4E1211B32336925B84'
+   MGDZ:
+      url: 'https://api-powerasia.k2net.io/api/v1'
+      tokenUrl: 'https://sts-powerasia.k2net.io'
+      secret: '0862b74f046b4f2086df5d4f4027cc'
+      agentCode: 'zf511bcnyagt'
+   Fbty:
+      url: 'https://sptapi.server.st-newsports.com' #api 接口地址
+      merchantCode: 'ZF511bcnytest'
+      merchantId: '1895368954644590594'
+      secret: 'kvErMHkE7aB3zKXZbPjo16qlOe3JpYbZ'
+   KYQP:
+      url: 'https://wc3-api.uaphl791.com/channelHandle'
+      AgentId:  '800302'
+      Md5Key:  '247DA5B30FCDA2EA'
+      DesKey : '8A9EE8A74B5E30B4'
+Log:
+   prefix: '[bootpkg]'
+   log-file: true
+   stdout: 'DEBUG'
+   file: 'DEBUG'
+   Log:
+      prefix: 'go-api'
+      log-file: true
+      stdout: 'DEBUG'
+      file: 'DEBUG'
+      path: '/data/app/go-cron/go-cron.log'
+
+Payment:
+   YinRunPay:
+      AppId: '3b80e69c900945a2828f259432d9deac'
+      MerchantCode: 20000255
+      Md5Key: 'DHY3WMM4HHB2HCY0MXVXSGNYJDBBOLGRY5FHEHLYDT6BUNZFOMV5NPXOMMP4MNEP3B2OSQVSAIOUPDIT4EVLH084HSMJDAIBTPUJNRWSK6SDAQMQRKMINGAXMKRVEB1M'
+      APIURL: 'http://jhpay.jhweb.xyz'
+      NotifyURL: 'https://devweb.792376.cc'
+      NotifyURLOut: 'https://devweb.792376.cc'
+      BankNotifyURLOut: 'https://devweb.792376.cc/api/callback/payOut/Bank'
+      VirtualNotifyURLOut: 'https://devweb.792376.cc/api/callback/payOut/Virtual'
+      AliPayVirtualNotifyURLOut: 'https://devweb.792376.cc/api/callback/payOut/AliPay'
+      ReturnUrl: 'https://devweb.792376.cc'
+      Currency: 'cny'
+
+Sms:
+   AccessKeyId: "YOUR_ACCESS_KEY_ID"
+   AccessKeySecret: "YOUR_ACCESS_KEY_SECRET"
+   Endpoint: "dysmsapi.aliyuncs.com"
+   SignName: "天津市南开区晟彩世纪百货"
+   templateCode: "SMS_318330388"

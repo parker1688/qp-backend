@@ -1,0 +1,28 @@
+package venues
+
+var VenueNameList = map[string]string{
+	"TYQP":  "TY",
+	"LYQP":  "LY",
+	"FGDZ":  "FG",
+	"MTQP":  "MT",
+	"WUGDZ": "5G",
+	"FBTY":  "FB",
+	"HGTY":  "HG",
+	"KYQP":  "KY",
+	"MGDZ":  "MG",
+	"AGZR":  "AG",
+	"BGZR":  "BG",
+	"CQ9":   "CQ9",
+	"JDB":   "JDB",
+	"VRCP":  "VR",
+	"PGDZ":  "PG",
+	"BBIN":  "BBIN",
+	"WALI":  "WALI",
+	"VGQP":  "VG",
+	"DBDJ":  "DB",
+	"JLDZ":  "JL",
+	"PPDZ":  "PP",
+	"PTDZ":  "PT",
+	"KXDZ":  "KX",
+	"SBTY":  "SABA",
+}

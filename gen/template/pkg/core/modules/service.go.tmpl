@@ -1,0 +1,95 @@
+// The build tag makes sure the stub is not built in the final build.
+
+package modules
+
+import (
+	"bootpkg/common/global"
+	"bootpkg/pkg/core/modules/dos"
+)
+
+
+func Save{{.StructName}}(vo *dos.{{.StructName}}) (bool, error) {
+	rRow := global.G_DB.Create(vo)
+	if rRow.Error != nil {
+		return false, rRow.Error
+	}
+	return true, nil
+}
+
+func FindPage{{.StructName}}(page, pageSize int,vo *dos.{{.StructName}}) (ret []*dos.{{.StructName}},total int64) {
+    query := global.G_DB.Model(&dos.{{.StructName}}{}){{range $i, $v := .TableColumns}}{{ if eq $v.Type "string" }}
+    if len(vo.{{$v.ColumnName}}) > 0 {
+        query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+    }{{end}}{{ if eq $v.Type "int64" }}
+    if vo.{{$v.ColumnName}} > 0 {
+       query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+    }{{end}}
+    {{ if eq $v.Type "int" }}
+        if vo.{{$v.ColumnName}} > 0 {
+           query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+        }{{end}}
+    {{ if eq $v.Type "automaticType.Time" }}
+    if !vo.{{$v.ColumnName}}.Timer().IsZero() {
+    		query = query.Where("{{ $v.SQLColumnName }} = ?", vo.{{$v.ColumnName}})
+    	}{{end}}
+    {{end}}
+	var count int64
+	query.Count(&count)
+	var dataSlice []*dos.{{.StructName}}
+	query.Offset((page - 1) * pageSize).Limit(pageSize).Find(&dataSlice)
+	return dataSlice, count
+}
+
+func FindByKey{{.StructName}}(vo *dos.{{.StructName}}) []*dos.{{.StructName}} {
+    var data []*dos.{{.StructName}}
+    query := global.G_DB.Model(&dos.{{.StructName}}{}){{range $i, $v := .TableColumns}}{{ if eq $v.Type "string" }}
+                                                          if len(vo.{{$v.ColumnName}}) > 0 {
+                                                              query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+                                                          }{{end}}{{ if eq $v.Type "int64" }}
+                                                          if vo.{{$v.ColumnName}} > 0 {
+                                                             query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+                                                          }{{end}}
+                                                          {{ if eq $v.Type "int" }}
+                                                              if vo.{{$v.ColumnName}} > 0 {
+                                                                 query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+                                                              }{{end}}
+                                                          {{ if eq $v.Type "automaticType.Time" }}
+                                                          if !vo.{{$v.ColumnName}}.Timer().IsZero() {
+                                                          		query = query.Where("{{ $v.SQLColumnName }} = ?", vo.{{$v.ColumnName}})
+                                                          	}{{end}}
+                                                          {{end}}query.Find(&data)
+    return data
+}
+
+func FindByKey{{.StructName}}First(vo *dos.{{.StructName}}) *dos.{{.StructName}} {
+    var data *dos.{{.StructName}}
+    query := global.G_DB.Model(&dos.{{.StructName}}{}){{range $i, $v := .TableColumns}}{{ if eq $v.Type "string" }}
+                                                          if len(vo.{{$v.ColumnName}}) > 0 {
+                                                              query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+                                                          }{{end}}{{ if eq $v.Type "int64" }}
+                                                          if vo.{{$v.ColumnName}} > 0 {
+                                                             query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+                                                          }{{end}}
+                                                          {{ if eq $v.Type "int" }}
+                                                              if vo.{{$v.ColumnName}} > 0 {
+                                                                 query = query.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}})
+                                                              }{{end}}
+                                                          {{ if eq $v.Type "automaticType.Time" }}
+                                                          if !vo.{{$v.ColumnName}}.Timer().IsZero() {
+                                                          		query = query.Where("{{ $v.SQLColumnName }} = ?", vo.{{$v.ColumnName}})
+                                                          	}{{end}}
+                                                          {{end}}query.Take(&data)
+    return data
+}
+
+//根据主键Update
+func Update{{.StructName}}(vo *dos.{{.StructName}}) bool {
+		return global.G_DB.Model(vo){{range $i, $v := .TableColumns}}{{if eq $v.ColumnKey "PRI"}}.Where(`{{$v.SQLColumnName}} = ?`, vo.{{$v.ColumnName}}){{end}}{{end}}.Updates(map[string]interface{}{
+    	{{range $i, $v := .TableColumns}}{{if ne $v.ColumnKey "PRI"}}{{if ne $v.SQLColumnName "create_time"}}{{if ne $v.SQLColumnName "update_time"}}"{{$v.SQLColumnName}}":vo.{{$v.ColumnName}},
+    	{{end}}{{end}}{{end}}{{end}}
+    	}).Error == nil
+}
+
+func Delete{{.StructName}}(vo *dos.{{.StructName}}) bool {
+return global.G_DB.Model(&dos.{{.StructName}}{}){{range $i, $v := .TableColumns}}{{if eq $v.ColumnKey "PRI"}}.Where("{{ $v.SQLColumnName }} = ?" , vo.{{$v.ColumnName}}){{end}}{{end}}.Delete(vo).Error == nil
+}

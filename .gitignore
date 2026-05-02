@@ -1,0 +1,16 @@
+/go.sum
+/bootpkg.log
+/.idea
+/*.exe
+/go.mod
+/conf.yaml
+/upload/*.png
+/*.log
+/cmd/redpacketCron/crontab/*.log
+/pkg/service/payment/*.log
+/upload/*
+/upload
+.DS_Store
+*.swp
+*.swo
+web_server

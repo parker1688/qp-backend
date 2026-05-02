@@ -1,0 +1,43 @@
+General:
+   # Debug | Release
+   ENV: 'Debug'
+   SHA256Salt: '123i1j2i3jiqewinajnjasdfnujaisdfhu1h23u1h2u3hnjqknjkansdjfnjxzcv'
+   CryptoAuthToken: 'replace-with-random-token'
+   AesEcbKey: 'fhu1@12#1h2!3hnj'
+   HttpProxy: 'http://172.24.230.196:8080'
+
+Mysql:
+   IsInit: true
+   # tls=skip-verify 使用tls链接, tls=false 不适用tls链接
+   DSN: 'root:password@(127.0.0.1:3306)/database?charset=utf8&parseTime=true&loc=Local&tls=skip-verify'
+   MaxOpenConn: 20
+   MaxIdleConn: 20
+   #加密DSN initialization_test
+   EncryptionDSN: false
+
+Redis:
+   IsInit: true
+   Addr: '127.0.0.1:6379'
+   Password: ''
+   DB : 0
+   PoolSize: 10
+   #加密Password initialization_test
+   EncryptionPassword: false
+
+
+# Kafka
+MQ:
+   # false: 不启用,true:启用
+   IsInit: true
+   Kafka:
+      #连接地址 ,分隔
+      Addr: '127.0.0.1:9092'
+      # 发送消息: false 同步方式, true异步方式
+      IsAsync: false
+      #版本号(关键)
+      Version: '2.8.1'
+
+
+
+Log:
+   path: './bootpkg.log'

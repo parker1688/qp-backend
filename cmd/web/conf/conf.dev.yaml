@@ -1,0 +1,61 @@
+General:
+  ENV: Debug
+  AesEcbKey: value
+  HttpProxy: value
+  UploadFilePath: value
+  UploadSecondPass: true
+  ApiSHA256Salt: value
+  RsaPublicKey: value
+  DefaultCurrency: value
+  ImageDomain: value
+  TestEnvLaunchApiUrl: value
+  GoogleAuthFlag: false
+
+Mysql:
+  IsInit: true
+#  DSN: root:Zx_Fdy0kj71122@tcp(16.163.184.169:3306)/q_game?charset=utf8mb4&parseTime=true
+  DSN: 'root:Lx_Bca0zj63322@(43.198.95.52:3306)/dev_game?charset=utf8&parseTime=true&loc=Local&tls=skip-verify'
+  MaxOpenConn: 100
+  MaxIdleConn: 10
+  EncryptionDSN: false
+  SkipInitializeWithVersion: false
+
+MysqlSharding:
+  IsInit: false
+  DSN: value
+  MaxOpenConn: 100
+  MaxIdleConn: 10
+  EncryptionDSN: false
+  SkipInitializeWithVersion: false
+
+Redis:
+  IsInit: true
+  Addr: 16.163.184.169:6379
+  Password: Zx_kj71122
+  Db: 0
+  PoolSize: 30
+  EncryptionPassword: false
+  MinIdleConn: 5
+
+SHA256Salt:
+
+MQ:
+  IsInit: false
+  Kafka:
+    Addr: value
+    Version: value
+    IsAsync: true
+
+ES:
+  IsInit: false
+  Addr: value
+
+Log:
+  prefix: value
+  log-file: ./web.log
+  stdout: ./web.log
+  file: ./web.log
+  path: ./web.log
+
+Venue:
+  IsInit: false

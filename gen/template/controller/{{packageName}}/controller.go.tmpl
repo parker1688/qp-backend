@@ -1,0 +1,102 @@
+// The build tag makes sure the stub is not built in the final build.
+
+package {{.PackageName}}
+
+import (
+	"bootpkg/common/response"
+	"bootpkg/common/expands/automaticType"
+	"bootpkg/pkg/core/modules"
+	"bootpkg/pkg/core/modules/dos"
+	"bootpkg/common/tool"
+    "github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
+)
+
+// api: api/{{.PackageName}}/save
+func Save{{.StructName}}Control(c *gin.Context) {
+     var jsonp dos.{{.StructName}}
+     err := c.ShouldBind(&jsonp)
+	 err1 := validator.New().Struct(jsonp)
+	 if err != nil || err1 != nil {
+         response.FailErrJSON(c, response.ERROR_PARAMETER, err.Error())
+         return
+     }
+     {{range $i, $v := .TableColumns}}{{ if eq $v.SQLColumnName "create_by" }}
+     userInfo , ok := c.Get("UserInfo")
+     if ok {
+         jsonp.CreateBy = userInfo.(*dos.AdminUser).UserName
+     }
+     {{end}}
+     {{end}}
+     data , err  := modules.Save{{.StructName}}(&jsonp)
+    if err != nil {
+        response.FailErrJSON(c, response.ERROR_PARAMETER, err.Error())
+        return
+    }
+    response.SuccessJSON(c, data)
+}
+
+// api: api/{{.PackageName}}/findPage
+func FindPage{{.StructName}}Control(c *gin.Context) {
+    jsonp := struct {
+        response.PageQuery
+        dos.{{.StructName}}
+    }{}
+	jsonp.PageQuery.PageNo = tool.Atoi(c.DefaultQuery("current", "1"))
+	jsonp.PageQuery.PageSize = tool.Atoi(c.DefaultQuery("pageSize", "10"))
+	{{range $i, $v := .TableColumns}}{{ if eq $v.Type "string" }}jsonp.{{$v.ColumnName}} = c.DefaultQuery("{{ $v.SQLColumnName }}",""){{end}}{{ if eq $v.Type "int64" }}jsonp.{{$v.ColumnName}} = tool.Int(c.DefaultQuery("{{ $v.SQLColumnName }}","")){{end}}{{ if eq $v.Type "int" }}jsonp.{{$v.ColumnName}} = tool.Atoi(c.DefaultQuery("{{ $v.SQLColumnName }}","")){{end}}{{ if eq $v.Type "automaticType.Time" }}jsonp.{{$v.ColumnName}} = automaticType.Time(tool.StrToTimeZero(c.DefaultQuery("{{ $v.SQLColumnName }}",""))){{end}}
+    {{end}}
+	err := validator.New().Struct(jsonp)
+	if err != nil {
+		response.FailErrJSON(c, response.ERROR_PARAMETER, err.Error())
+		return
+	}
+    data, total := modules.FindPage{{.StructName}}(jsonp.PageNo, jsonp.PageSize, &jsonp.{{.StructName}})
+    response.SuccessPageJSON(c, jsonp.PageNo, jsonp.PageSize, total, data)
+}
+
+// api: api/{{.PackageName}}/findByKey
+func FindByKey{{.StructName}}Control(c *gin.Context) {
+     var jsonp dos.{{.StructName}}
+     err := c.ShouldBind(&jsonp)
+     err1 := validator.New().Struct(jsonp)
+     if err != nil || err1 != nil {
+         response.FailErrJSON(c, response.ERROR_PARAMETER, err.Error())
+         return
+     }
+     data := modules.FindByKey{{.StructName}}(&jsonp)
+     response.SuccessJSON(c, data)
+}
+
+// api: api/{{.PackageName}}/update
+func Update{{.StructName}}Control(c *gin.Context) {
+	var jsonp dos.{{.StructName}}
+    err := c.ShouldBind(&jsonp)
+	err1 := validator.New().Struct(jsonp)
+	if err != nil || err1 != nil {
+        response.FailErrJSON(c, response.ERROR_PARAMETER, err.Error())
+        return
+    }
+    {{range $i, $v := .TableColumns}}{{ if eq $v.SQLColumnName "update_by" }}
+     userInfo , ok := c.Get("UserInfo")
+     if ok {
+         jsonp.UpdateBy = userInfo.(*dos.AdminUser).UserName
+     }
+     {{end}}
+     {{end}}
+    data := modules.Update{{.StructName}}(&jsonp)
+    response.SuccessJSON(c, data)
+}
+
+// api: api/{{.PackageName}}/delete
+func Delete{{.StructName}}Control(c *gin.Context) {
+    var jsonp dos.{{.StructName}}
+	err := c.ShouldBind(&jsonp)
+	err1 := validator.New().Struct(jsonp)
+	if err != nil || err1 != nil {
+		response.FailErrJSON(c, response.ERROR_PARAMETER, err.Error())
+		return
+	}
+	data := modules.Delete{{.StructName}}(&jsonp)
+	response.SuccessJSON(c, data)
+}

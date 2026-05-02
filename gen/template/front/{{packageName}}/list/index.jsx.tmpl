@@ -1,0 +1,191 @@
+import React, { Component } from 'react';
+import ProTable from '@ant-design/pro-table';
+import { PageContainer, PageLoading } from '@ant-design/pro-layout';
+import { connect } from 'dva';
+import { message, Divider, Button, Popconfirm, Table , Space, Badge , Tag} from 'antd';
+import request from '@/utils/request';
+import FormCreate from '@/components/FormCreate';
+import { PlusOutlined } from '@ant-design/icons';
+
+const scheam = {
+  type: 'object',
+  properties: {
+{{range $i, $v := .TableColumns}}{{ if eq $v.Type "string" }}{{ $v.SQLColumnName }}:{
+     title: '{{ $v.ColumnComment }}',
+     type: 'string',
+     required: true,
+    },{{end}}{{ if eq $v.Type "int64" }}{{ $v.SQLColumnName }}:{
+     title: '{{ $v.ColumnComment }}',
+     type: 'number',
+     required: true,
+    },{{end}}{{ if eq $v.Type "int" }}{{ $v.SQLColumnName }} : {
+     title: '{{ $v.ColumnComment }}',
+     type: 'number',
+     required: true,
+   },{{end}}
+    {{end}}
+  },
+};
+
+
+
+class index extends Component {
+  state = {
+    isReady: true,
+ }
+
+
+  constructor(props) {
+    super(props);
+    this.protableRef = React.createRef();
+  }
+
+  componentDidMount() {}
+
+  render() {
+    if (!this.state.isReady) {
+      return <PageLoading />;
+  }
+    const columns = [
+      {{range $i, $v := .TableColumns}}
+      {
+          title: '{{ $v.ColumnComment }}',
+          dataIndex: '{{ $v.SQLColumnName }}',
+      },{{end}}
+      {
+        title: '操作',
+        key: 'action',
+        hideInSearch: true,
+        render: (text, record) => (
+          <span>
+            <a
+              loading={this.props.submitting}
+              onClick={() => {
+                this.setState({
+                  formHttpEnum: 'update',
+                  loadKeyDataUrl: `/api/{{.PackageName}}/findByKey?id=${record.id}`,
+                  formShow: true,
+                });
+              }}
+            >
+              修改
+            </a>
+            <Divider type="vertical" />
+            <a
+              loading={this.props.submitting}
+              onClick={() => {
+                this.setState({
+                  formHttpEnum: 'copy',
+                  loadKeyDataUrl: `/api/{{.PackageName}}/findByKey?id=${record.id}`,
+                  formShow: true,
+                });
+              }}
+            >
+              复制
+            </a>
+            <Divider type="vertical" />
+          </span>
+        ),
+      },
+    ];
+    return (
+      <PageContainer>
+        <ProTable
+            search={@@@@@{
+              collapsed: false,
+              collapseRender:() => null
+            }}
+            rowSelection={@@@@@{
+              // 自定义选择项参考: https://ant.design/components/table-cn/#components-table-demo-row-selection-custom
+              // 注释该行则默认不显示下拉选项
+              selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT],
+              // defaultSelectedRowKeys: [0],
+            }}
+            tableAlertRender={({ selectedRowKeys, selectedRows, onCleanSelected }) => {
+              this.state.data = { ids : selectedRowKeys};
+              return (
+                <Space size={24}>
+                  <span>
+                    已选 {selectedRowKeys.length} 项
+                    <a style={@@@@@{ marginInlineStart: 8 }} onClick={onCleanSelected}>
+                      取消选择
+                    </a>
+                  </span>
+                </Space>
+              );
+            }}
+            tableAlertOptionRender={() => {
+              return (
+                <Space size={16}>
+                  <a
+                    loading={this.props.submitting}
+                    onClick={() => {
+                      this.setState({
+                        formHttpEnum: 'create',
+                        formBatchShow: true,
+                      });
+                    }}
+                  >
+
+                  </a>
+                </Space>
+              );
+            }}
+          actionRef={this.protableRef}
+          headerTitle=""
+          rowKey="id"
+          pagination={@@@@@{
+            showSizeChanger: true,
+          }}
+          toolBarRender={(action, { selectedRows }) => [
+            <Button
+              type="primary"
+              loading={this.props.submitting}
+              icon={<PlusOutlined />}
+              onClick={() => {
+                this.setState({
+                  formShow: true,
+                  formHttpEnum: 'create',
+                });
+              }}
+            >
+              新建
+            </Button>,
+          ]}
+          options={@@@@@{ setting: false, reload: true }}
+          columns={columns}
+          onRequestError={() => message.error('加载失败,请重试')}
+          request={(param) => {
+            return request('/api/{{.PackageName}}/findPage', { params: param });
+          }}
+        />
+
+        {this.state?.formShow ? (
+          <FormCreate
+            schema={scheam}
+            loading={this.props.submitting}
+            formData={this.state.data}
+            onCancel={() => {
+              this.setState({
+                formShow: false,
+              });
+              setTimeout(() => {
+                this.protableRef?.current?.reload();
+              }, 2000);
+            }}
+            {...this.props}
+            httpEnum={this.state?.formHttpEnum}
+            createUrl={`/api/{{.PackageName}}/save`}
+            updateUrl={`/api/{{.PackageName}}/update`}
+            loadKeyDataUrl={this.state.loadKeyDataUrl}
+          />
+        ) : null}
+
+      </PageContainer>
+    );
+  }
+}
+
+export default connect(({ loading }) => ({
+  submitting: loading.models.global,
+}))(index);

@@ -1,0 +1,19 @@
+package router
+
+import (
+	"bootpkg/cmd/web/controller/{{.PackageName}}"{{.LoginPackage}}
+)
+
+func init() {
+	routersFun = append(routersFun, {{.PackageName}}Router)
+}
+
+func {{.PackageName}}Router() {
+	r := routers.Group("/api/{{.PackageName}}"){{.LoginHanle}}
+	
+	r.GET("/findPage", {{.PackageName}}.FindPage{{.StructName}}Control)  //查询分页
+	r.GET("/findByKey", {{.PackageName}}.FindByKey{{.StructName}}Control)  //查询主键
+	r.POST("/save", {{.PackageName}}.Save{{.StructName}}Control)         //保存
+	r.POST("/update", {{.PackageName}}.Update{{.StructName}}Control)     //修改
+	r.POST("/delete", {{.PackageName}}.Delete{{.StructName}}Control)     //删除
+}
