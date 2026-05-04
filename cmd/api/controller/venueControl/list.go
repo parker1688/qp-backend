@@ -51,7 +51,7 @@ func GetVenusList(c *gin.Context) {
 				Describe:   v.Describe,
 				GameType:   v.GameType,
 			}
-			m.GameTypeImg = modules.FindByKeyFcVenueImg(&dos.FcVenueImg{VenueCode: v.VenueCode, MerchantCode: v.MerchantCode}, nil)
+			m.GameTypeImg = modules.FindByKeyFcVenueImg(&dos.FcVenueImg{VenueCode: v.VenueCode, MerchantCode: ""}, nil)
 			newData = append(newData, m)
 		}
 		venuesCache.Set(key, newData, 10*time.Minute)

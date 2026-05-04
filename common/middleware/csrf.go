@@ -21,6 +21,9 @@ var csrfSkipPathPrefixes = []string{
 	"/api/callback/",
 	"/api/updateProductStatus",
 	"/api/queryProductList",
+	"/api/login",
+	"/api/user/login",
+	"/api/base/nologin/login",
 }
 
 // GenerateCSRFToken 生成 CSRF token
