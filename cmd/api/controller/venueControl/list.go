@@ -29,6 +29,10 @@ var venuesCache = cache.New(3*time.Minute, 3*time.Minute)
 
 func GetVenusList(c *gin.Context) {
 	gameType := c.DefaultQuery("game_type", "")
+	if global.G_REDIS.Get(context.Background(), "VenuesSyncFlag").Val() == "1" {
+		venuesCache.Flush()
+		global.G_REDIS.Set(context.Background(), "VenuesSyncFlag", "0", -1)
+	}
 
 	merchantCode := modules.GetAgentDomainMerchantCodeByHeader(c)
 

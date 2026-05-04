@@ -8,7 +8,6 @@ import (
 	"bootpkg/common/response"
 	"bootpkg/pkg/core/modules/dos"
 	"bootpkg/pkg/core/modules/enmus"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -230,7 +229,7 @@ func FindByKeyFcAgentDomainFirst(vo *dos.FcAgentDomain) *dos.FcAgentDomain {
 
 // 根据主键Update
 func UpdateFcAgentDomain(vo *dos.FcAgentDomain) bool {
-	fmt.Printf("[UpdateFcAgentDomain] id=%s\n", vo.Id)
+	global.G_LOG.Infof("[UpdateFcAgentDomain] id=%s", vo.Id)
 	tx := global.G_DB.Model(vo).Where(`id = ?`, vo.Id).Updates(map[string]interface{}{
 		"agent_name":     vo.AgentName,
 		"invite_code":    vo.InviteCode,
@@ -252,10 +251,10 @@ func UpdateFcAgentDomain(vo *dos.FcAgentDomain) bool {
 		"logo_img":       vo.LogoImg,
 	})
 	if tx.Error != nil {
-		fmt.Printf("[UpdateFcAgentDomain] FAILED error=%v\n", tx.Error)
+		global.G_LOG.Errorf("[UpdateFcAgentDomain] FAILED error=%v", tx.Error)
 		return false
 	}
-	fmt.Printf("[UpdateFcAgentDomain] rows_affected=%d\n", tx.RowsAffected)
+	global.G_LOG.Infof("[UpdateFcAgentDomain] rows_affected=%d", tx.RowsAffected)
 	return tx.RowsAffected > 0
 }
 

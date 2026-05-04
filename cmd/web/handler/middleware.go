@@ -9,9 +9,9 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
+	"os"
 	"runtime"
 	"strings"
 
@@ -71,8 +71,12 @@ func Cors() gin.HandlerFunc {
 			allowedOriginList = []string{
 				"http://localhost:3000",
 				"http://localhost:5173",
+				"http://localhost:5174",
+				"http://localhost:5175",
 				"http://localhost:8080",
 				"http://127.0.0.1:5173",
+				"http://127.0.0.1:5174",
+				"http://127.0.0.1:5175",
 				"http://127.0.0.1:8080",
 			}
 		}
@@ -87,7 +91,7 @@ func Cors() gin.HandlerFunc {
 			c.Header("Access-Control-Allow-Origin", origin)
 			c.Header("Access-Control-Allow-Credentials", "true")
 			c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-			c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-CSRF-Token")
+			c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-CSRF-Token, Token, merchantCode, ClientType, language, MerchantId, MerchantUrl")
 			c.Header("Access-Control-Max-Age", "3600")
 		}
 
@@ -127,7 +131,7 @@ func stack(skip int) []byte {
 		// Print this much at least.  If we can't find the source, it won't show.
 		_, _ = fmt.Fprintf(buf, "%s:%d (0x%x)\n", file, line, pc)
 		if file != lastFile {
-			data, err := ioutil.ReadFile(file)
+			data, err := os.ReadFile(file)
 			if err != nil {
 				continue
 			}

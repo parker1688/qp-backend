@@ -83,14 +83,14 @@ func InitValidator() {
 	// **注册中文翻译，只执行一次，避免多次注册导致冲突**
 	err := zhtrans.RegisterDefaultTranslations(global.VALIDATE, global.LANG)
 	if err != nil {
-		fmt.Println("RegisterDefaultTranslations Error:", err)
+		global.G_LOG.Errorf("RegisterDefaultTranslations Error: %v", err)
 	}
 }
 
 // 关机
 func Shutdwon(server *http.Server, server2 *http.Server) {
 	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
 	<-c
 	cxt, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -105,7 +105,7 @@ func Shutdwon(server *http.Server, server2 *http.Server) {
 			global.G_LOG.Errorf("shutdwon2 err: %v", err)
 		}
 	}
-	fmt.Println("exit.")
+	global.G_LOG.Info("exit.")
 }
 
 func usage() {

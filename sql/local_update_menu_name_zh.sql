@@ -97,5 +97,4 @@ UPDATE menu SET menu_name='手机验证码', name='手机验证码' WHERE role_f
 UPDATE menu SET menu_name='转账管理', name='转账管理' WHERE role_flag LIKE '%/transferAccounts/index';
 UPDATE menu SET menu_name='用户管理', name='用户管理' WHERE role_flag LIKE '%/user/index';
 UPDATE menu SET menu_name='VIP管理', name='VIP管理' WHERE role_flag LIKE '%/vip/index';
-UPDATE menu SET menu_name='VIP信息', name='VIP信息' WHERE role_flag LIKE '%/vipInfo/index';
-COMMIT;
+UPDATE menu SET menu_name='VIP信息', name='VIP信息' WHERE role_flag LIKE '%/vipInfo/index';s

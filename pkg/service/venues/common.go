@@ -17,6 +17,13 @@ import (
 
 var venuesCache = cache.New(120*time.Second, 120*time.Second)
 
+func checkAndFlushVenuesCache() {
+	if global.G_REDIS.Get(context.Background(), "VenuesSyncFlag").Val() == "1" {
+		venuesCache.Flush()
+		global.G_REDIS.Set(context.Background(), "VenuesSyncFlag", "0", -1)
+	}
+}
+
 const (
 	venuesCacheLine           = "venuesCache_Line:%s"             //场馆在线
 	venuesCodeUniqueCacheLine = "venuesCodeUniqueCacheLine:%s"    //场馆在线
@@ -32,6 +39,7 @@ const (
 //	@param merchantCode
 //	@return []*dos.FcMerchantVenue
 func GetVenuesLine(merchantCode string) []*dos.FcMerchantVenue {
+	checkAndFlushVenuesCache()
 	ojbData, ok := venuesCache.Get(fmt.Sprintf(venuesCacheLine, merchantCode))
 	var data []*dos.FcMerchantVenue
 	if !ok {
@@ -52,6 +60,7 @@ func GetVenuesLine(merchantCode string) []*dos.FcMerchantVenue {
 //	@param merchantCode
 //	@return []*dos.FcMerchantVenue
 func GetVenueCodeUniqueVenueLine(merchantCode string) []*dos.FcMerchantVenue {
+	checkAndFlushVenuesCache()
 	ojbData, ok := venuesCache.Get(fmt.Sprintf(venuesCodeUniqueCacheLine, merchantCode))
 	var data []*dos.FcMerchantVenue
 	if !ok {
@@ -65,7 +74,7 @@ func GetVenueCodeUniqueVenueLine(merchantCode string) []*dos.FcMerchantVenue {
 		for i := range tmpVenueArr {
 			tmpData := tmpVenueArr[i]
 			_, ok := tmpVenueMap[tmpData.VenueCode]
-			if ok {
+			if !ok {
 				tmpVenueMap[tmpData.VenueCode] = true
 				data = append(data, tmpData)
 			}
@@ -84,18 +93,14 @@ func GetVenueCodeUniqueVenueLine(merchantCode string) []*dos.FcMerchantVenue {
 //	@param merchantCode
 //	@return []*dos.FcMerchantVenue
 func GetVenuesLineWithGameType(merchantCode, gameType string) []*dos.FcMerchantVenue {
-	if gameType == "" {
-		if global.G_REDIS.Get(context.Background(), "VenuesSyncFlag").Val() == "1" {
-			venuesCache.Delete(fmt.Sprintf(venuesCacheLineGameType, merchantCode, gameType))
-			global.G_REDIS.Set(context.Background(), "VenuesSyncFlag", "0", -1)
-		}
-	}
+	checkAndFlushVenuesCache()
 
 	ojbData, ok := venuesCache.Get(fmt.Sprintf(venuesCacheLineGameType, merchantCode, gameType))
 	var data []*dos.FcMerchantVenue
 	if !ok {
-		//全部回收
-		query := global.G_DB.Model(&dos.FcMerchantVenue{})
+		//全部回收，仅返回在 fc_venue（gameStadium）中已配置的场馆
+		query := global.G_DB.Model(&dos.FcMerchantVenue{}).
+			Where("venue_code IN (SELECT venue_code FROM fc_venue)")
 		if gameType != "" {
 			query = query.Where("merchant_code = ? and status in ? AND game_type like ?", merchantCode, []int{1, 3}, "%"+gameType+"%")
 
@@ -117,6 +122,7 @@ func GetVenuesLineWithGameType(merchantCode, gameType string) []*dos.FcMerchantV
 //	@param venueCode 场馆Code
 //	@return []*dos.FcMerchantVenue
 func GetVenuesStatus(merchantCode string, venueCode string) *dos.FcMerchantVenue {
+	checkAndFlushVenuesCache()
 	ojbData, ok := venuesCache.Get(fmt.Sprintf(venuesCacheStatus, merchantCode, venueCode))
 	var data *dos.FcMerchantVenue
 	if !ok {
@@ -138,6 +144,7 @@ func GetVenuesStatus(merchantCode string, venueCode string) *dos.FcMerchantVenue
 //	@param venueCode 场馆Code
 //	@return []*dos.FcVenue
 func GetVenuesType(venueCode string) *dos.FcVenue {
+	checkAndFlushVenuesCache()
 	ojbData, ok := venuesCache.Get(fmt.Sprintf(venuesCacheType, venueCode))
 	var data *dos.FcVenue
 	if !ok {

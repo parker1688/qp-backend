@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -26,7 +25,8 @@ func ReadFileByte(path string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, err := ioutil.ReadAll(file)
+	defer file.Close()
+	data, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func Base64ToFile(data, path string) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(path, decodeData, 0666)
+	err = os.WriteFile(path, decodeData, 0666)
 	if err != nil {
 		return err
 	}
@@ -130,16 +130,14 @@ func CreateFile(data, path string) error {
 }
 
 func GetAllFileName(pathname string, s []string) ([]string, error) {
-	rd, err := ioutil.ReadDir(pathname)
+	entries, err := os.ReadDir(pathname)
 	if err != nil {
 		fmt.Println("read dir fail:", err)
 		return s, err
 	}
-
-	for _, fi := range rd {
+	for _, fi := range entries {
 		if !fi.IsDir() {
-			fullName := fi.Name()
-			s = append(s, fullName)
+			s = append(s, fi.Name())
 		}
 	}
 	return s, nil
@@ -163,7 +161,7 @@ func FileMerge(inDir, infileName, outfile string, perm os.FileMode) error {
 		if err != nil {
 			return err
 		}
-		b, err := ioutil.ReadAll(f)
+		b, err := io.ReadAll(f)
 		if err != nil {
 			return err
 		}

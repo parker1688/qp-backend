@@ -70,15 +70,15 @@ func main() {
 // 关机
 func Shutdwon(server *http.Server) {
 	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
 	<-c
 	cxt, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	err := server.Shutdown(cxt)
 	if err != nil {
-		fmt.Println("err", err)
+		global.G_LOG.Errorf("shutdown err: %v", err)
 	}
-	fmt.Println("exit.")
+	global.G_LOG.Info("exit.")
 }
 
 func usage() {

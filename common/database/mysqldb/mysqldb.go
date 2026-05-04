@@ -22,7 +22,10 @@ func NewOnceMySql() {
 	sqlDB.SetConnMaxLifetime(5 * time.Minute)
 	sqlDB.SetConnMaxIdleTime(2 * time.Minute)
 	err = sqlDB.Ping()
-	fmt.Println("start db", err)
+	if err != nil {
+		panic(fmt.Errorf("mysql ping failed: %w", err))
+	}
+	fmt.Println("start db <nil>")
 
 	gConfig := &gorm.Config{
 		Logger:      logger.Default.LogMode(logger.Silent),
@@ -43,6 +46,9 @@ func NewOnceMySql() {
 	gormDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn: sqlDB,
 	}), gConfig)
+	if err != nil {
+		panic(fmt.Errorf("gorm open mysql failed: %w", err))
+	}
 
 	global.G_DB = gormDB
 }
@@ -57,7 +63,10 @@ func NewOnceMySqlSharding() {
 	sqlDB.SetConnMaxLifetime(5 * time.Minute)
 	sqlDB.SetConnMaxIdleTime(2 * time.Minute)
 	err = sqlDB.Ping()
-	fmt.Println("start db sharding", err)
+	if err != nil {
+		panic(fmt.Errorf("mysql sharding ping failed: %w", err))
+	}
+	fmt.Println("start db sharding <nil>")
 
 	gConfig := &gorm.Config{
 		Logger:      logger.Default.LogMode(logger.Silent),
@@ -78,6 +87,9 @@ func NewOnceMySqlSharding() {
 	gormDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn: sqlDB,
 	}), gConfig)
+	if err != nil {
+		panic(fmt.Errorf("gorm open mysql sharding failed: %w", err))
+	}
 
 	global.G_DB_SHARDING = gormDB
 }

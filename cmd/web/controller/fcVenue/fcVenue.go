@@ -11,6 +11,7 @@ import (
 	"bootpkg/common/tool"
 	"bootpkg/pkg/core/modules"
 	"bootpkg/pkg/core/modules/dos"
+	"context"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
@@ -51,6 +52,7 @@ func SaveFcVenueControl(c *gin.Context) {
 		response.FailErrJSON(c, response.ERROR_PARAMETER, "保存场馆失败")
 		return
 	}
+	global.G_REDIS.Set(context.Background(), "VenuesSyncFlag", "1", -1)
 
 	response.SuccessJSON(c, data)
 }
@@ -146,6 +148,7 @@ func UpdateFcVenueControl(c *gin.Context) {
 		// 同步状态给场馆游戏列表
 		modules.SyncMerchantVenueByStatus(venue.VenueCode, venue.Status)
 		modules.SyncVenueGameByStatus(venue.VenueCode, venue.Status)
+		global.G_REDIS.Set(context.Background(), "VenuesSyncFlag", "1", -1)
 	}
 
 	response.SuccessJSON(c, data)
@@ -171,5 +174,6 @@ func DeleteFcVenueControl(c *gin.Context) {
 	})
 	global.G_DB.
 		Where("venue_code=? and merchant_code=?", venue.VenueCode, "").Delete(&dos.FcVenueImg{})
+	global.G_REDIS.Set(context.Background(), "VenuesSyncFlag", "1", -1)
 	response.SuccessJSON(c, data)
 }

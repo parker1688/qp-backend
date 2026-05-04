@@ -129,13 +129,8 @@ func FindByKeyFcVenueImg(vo *dos.FcVenueImg, c *gin.Context) []*dos.FcVenueImg {
 		query = query.Where("link_bar = ?", vo.LinkBar)
 	}
 
-	if c == nil {
-		if len(vo.MerchantCode) > 0 {
-			query = query.Where("merchant_code = ?", vo.MerchantCode)
-		} else {
-			query = query.Where("merchant_code = ?", vo.MerchantCode)
-		}
-	}
+	// 精确按 merchant_code 过滤；空字符串表示全局场馆图片。
+	query = query.Where("merchant_code = ?", vo.MerchantCode)
 
 	query.Find(&data)
 	return data
