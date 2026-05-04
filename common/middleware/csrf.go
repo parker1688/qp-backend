@@ -26,6 +26,20 @@ var csrfSkipPathPrefixes = []string{
 	"/api/base/nologin/login",
 }
 
+var csrfBypassOrigins = map[string]struct{}{
+	"http://localhost:5173": {},
+	"http://127.0.0.1:5173": {},
+	"http://localhost:5174": {},
+	"http://127.0.0.1:5174": {},
+}
+
+var csrfBypassRefererPrefixes = []string{
+	"http://localhost:5173/",
+	"http://127.0.0.1:5173/",
+	"http://localhost:5174/",
+	"http://127.0.0.1:5174/",
+}
+
 // GenerateCSRFToken 生成 CSRF token
 func GenerateCSRFToken() (string, error) {
 	bytes := make([]byte, CSRFTokenLength)
@@ -83,10 +97,36 @@ func shouldSkipCSRF(path string) bool {
 	return false
 }
 
+func shouldBypassCSRFByOrigin(c *gin.Context) bool {
+	origin := strings.TrimSpace(c.GetHeader("Origin"))
+	if origin != "" {
+		_, ok := csrfBypassOrigins[origin]
+		if ok {
+			return true
+		}
+	}
+
+	referer := strings.TrimSpace(c.GetHeader("Referer"))
+	if referer == "" {
+		return false
+	}
+	for _, prefix := range csrfBypassRefererPrefixes {
+		if strings.HasPrefix(referer, prefix) {
+			return true
+		}
+	}
+	return false
+}
+
 // CSRFProtection CSRF 保护中间件
 func CSRFProtection() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if shouldSkipCSRF(c.Request.URL.Path) {
+			c.Next()
+			return
+		}
+
+		if shouldBypassCSRFByOrigin(c) {
 			c.Next()
 			return
 		}
